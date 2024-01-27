@@ -4,14 +4,12 @@ pragma solidity ^0.8.0;
 contract ErrorHandling {
     uint256 public balance;
     function deposit(uint256 amount) external {
-        require(amount > 0, "Amount must be greater than zero");
-        assert(balance + amount > balance);
+        require(amount > 1, "Amount must be greater than zero");
         balance += amount;
     }
 
     function withdraw(uint256 amount) external {
-        require(amount > 0, "Amount must be greater than zero");
-        require(amount <= balance, "Insufficient funds");
+        assert(amount <= balance);
         balance -= amount;
     }
 
