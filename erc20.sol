@@ -16,4 +16,7 @@ contract Mytoken is ERC20 {
     function burnToken(uint amount)public{
         _burn(msg.sender, amount);
     }
+    function transfer(uint amount, address recipient) public {
+        _transfer(msg.sender, recipient, amount);
+    }
 }
