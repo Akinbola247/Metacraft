@@ -1,11 +1,25 @@
 # Assessment contract
 
-Deployed on hardhat local node and interacted with using metamask.
-The contract basically allows users to deposit an amount, withdraw, setcontract state, getcontract state, get owner and get balance.
-# Features
-- Deposit: The owner can deposit funds into the contract. Only the owner can deposit funds.
-- Withdraw: The owner can withdraw funds from the contract. Only the owner can withdraw funds.
-- Activate/Deactivate Contract: The owner can activate or deactivate the contract.
-- Get Contract State: Returns the current state of the contract (active or not active).
-- Get Balance: Returns the current balance of the contract.
-- Get Owner: Returns the address of the owner.
+This is a simple smart contract written in Solidity. The contract allows the owner to manage a count, control the contract state (pause/unpause), and retrieve contract-related information.
+
+## Functions
+- getMycount():
+Returns the current count.
+
+- getContractState():
+Returns the current state of the contract (paused or active).
+
+- getOwner():
+Returns the address of the contract owner.
+
+- updatecount():
+Increases the count by 1. Only the owner can call this function when the contract is active.
+
+- downgradeCount():
+Decreases the count by 1. Only the owner can call this function when the contract is active.
+
+- activateContract():
+Unpauses the contract, allowing count-related operations. Only the owner can call this function.
+
+- deactivateContract():
+Pauses the contract, preventing count-related operations. Only the owner can call this function.
