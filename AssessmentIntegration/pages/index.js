@@ -9,7 +9,7 @@ export default function HomePage() {
   const [balance, setBalance] = useState(undefined);
   const [owner, setOwner] = useState(undefined);
 
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const contractAddress = "0x5e747BDe5bA807d938304aEb36db8416a934504e";
   const atmABI = atm_abi.abi;
 
   const getWallet = async() => {
@@ -56,30 +56,45 @@ export default function HomePage() {
 
   const getBalance = async() => {
     if (atm) {
-      const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
+      const provider = new ethers.providers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/TQWSoU70ZZaxxHyjFF9ywDNU1TZPZRsn');
       const Contract = new ethers.Contract(contractAddress, atmABI, provider);
-     setBalance((await Contract.getBalance()).toNumber());
+     setBalance((await Contract.getMycount()).toNumber());
     }
   }
   const getOwner = async() => {
     if (atm) {
-      const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
+      const provider = new ethers.providers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/TQWSoU70ZZaxxHyjFF9ywDNU1TZPZRsn');
       const Contract = new ethers.Contract(contractAddress, atmABI, provider);
      setOwner((await Contract.getOwner()));
     }
   }
 
-  const deposit = async() => {
+  const update = async() => {
     if (atm) {
-      let tx = await atm.deposit(1);
+      console.log(atm)
+      let tx = await atm.updatecount();
       await tx.wait()
       getBalance();
     }
   }
 
-  const withdraw = async() => {
+  const unpause = async() => {
     if (atm) {
-      let tx = await atm.withdraw(1);
+      let tx = await atm.activateContract();
+      await tx.wait()
+    }
+  }
+
+  const pause = async() => {
+    if (atm) {
+      let tx = await atm.deactivateContract();
+      await tx.wait()
+    }
+  }
+
+  const downgrade = async() => {
+    if (atm) {
+      let tx = await atm.downgradeCount();
       await tx.wait()
       getBalance();
     }
@@ -101,13 +116,17 @@ export default function HomePage() {
       getOwner();
     }
 
+    console.log(balance)
+
     return (
       <div>
         <p>Your Account: {account}</p>
         <p>Your Balance: {balance}</p>
-        <button onClick={deposit}>Deposit 1 ETH</button>
-        <button onClick={withdraw}>Withdraw 1 ETH</button>
+        <button onClick={update}>Update count</button>
+        <button onClick={downgrade}> downgrade count</button>
         <p>Contract Owner: {owner}</p>
+        <button onClick={pause}>Pause contract</button>
+        <button onClick={unpause}> Unpause contract</button>
       </div>
     )
   }
