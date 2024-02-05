@@ -5,20 +5,18 @@ pragma solidity ^0.8.9;
 
 contract Assessment {
     address payable public owner;
-    uint256 public balance;
     bool contractState;
+   uint public myCount;
 
-    event Deposit(uint256 amount);
-    event Withdraw(uint256 amount);
+    event Countupdated(uint256 amount);
 
-    constructor(uint initBalance) payable {
+    constructor() payable {
         owner = payable(msg.sender);
-        balance = initBalance;
         contractState = true;
     }
 
-    function getBalance() public view returns(uint256){
-        return balance;
+    function getMycount() public view returns(uint256){
+        return myCount;
     }
     function getContractState()public view returns(bool) {
         return contractState;
@@ -27,46 +25,21 @@ contract Assessment {
         return owner;
     }
 
-    function deposit(uint256 _amount) public payable {
-        require(contractState == true, 'not_active');
-        uint _previousBalance = balance;
-
-        // make sure this is the owner
-        require(msg.sender == owner, "You are not the owner of this account");
-
-        // perform transaction
-        balance += _amount;
-
-        // assert transaction completed successfully
-        assert(balance == _previousBalance + _amount);
-
-        // emit the event
-        emit Deposit(_amount);
+    function updatecount() public {
+        require(msg.sender == owner, 'not_authorized');
+        require(contractState == true, 'contract paused');
+        myCount += 1;
+        emit Countupdated(1);
     }
 
-    // custom error
-    error InsufficientBalance(uint256 balance, uint256 withdrawAmount);
-
-    function withdraw(uint256 _withdrawAmount) public {
-        require(msg.sender == owner, "You are not the owner of this account");
-        require(contractState == true, 'not_active');
-        uint _previousBalance = balance;
-        if (balance < _withdrawAmount) {
-            revert InsufficientBalance({
-                balance: balance,
-                withdrawAmount: _withdrawAmount
-            });
-        }
-
-        // withdraw the given amount
-        balance -= _withdrawAmount;
-
-        // assert the balance is correct
-        assert(balance == (_previousBalance - _withdrawAmount));
-
-        // emit the event
-        emit Withdraw(_withdrawAmount);
+    function downgradeCount() public {
+        require(msg.sender == owner, 'not_authorized');
+        require(contractState == true, 'contract paused');
+        require(myCount > 0, 'error');
+        myCount -= 1;
+         emit Countupdated(1);
     }
+
     function activateContract()public{
         require(msg.sender == owner, 'not_authorized');
         contractState = true;
